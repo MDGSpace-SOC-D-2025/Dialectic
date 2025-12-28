@@ -8,7 +8,6 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
 from langchain_community.document_loaders import WebBaseLoader
 import bs4
-# Note: You need START and END from langgraph.graph
 from langgraph.graph import StateGraph, END, START
 
 load_dotenv()
@@ -42,7 +41,7 @@ class GraphState(TypedDict):
 
 # --- Node Functions ---
 
-def process_tata_steel(state: GraphState):
+def process_peers(state: GraphState):
     loader = WebBaseLoader(
         web_path=f"https://www.moneycontrol.com/markets/financials/quarterly-results/{company_name}-{company_id}/#results",
         bs_kwargs={"parse_only": bs4.SoupStrainer(class_=("web_mc_container__cNDvS"))},
@@ -51,13 +50,13 @@ def process_tata_steel(state: GraphState):
     splits = RecursiveCharacterTextSplitter(chunk_size=1200, chunk_overlap=100).split_documents(docs)
     vectorstore = Chroma.from_documents(documents=splits, embedding=embeddings)
     
-    context = vectorstore.similarity_search("Company Name Price MCap", k=3)
+    context = vectorstore.similarity_search("PEERS COMPARISION", k=3)
     context_text = "".join([d.page_content for d in context])
     
     res = llm.invoke(f"Context: {context_text}\n\nSummarize peer comparison with respect to {company_name} in 100 words.")
     return {"summaries": [f"--- {company_name} PEERS ---\n{res.content}"]}
 
-def process_meesho_cashflow(state: GraphState):
+def process_cashflow(state: GraphState):
     loader = WebBaseLoader(
         web_path=f"https://www.moneycontrol.com/financials/{company_name}/cash-flowVI/{company_id}#{company_id}",
         bs_kwargs={"parse_only": bs4.SoupStrainer(class_=("mctable1"))},
@@ -66,7 +65,7 @@ def process_meesho_cashflow(state: GraphState):
     splits = RecursiveCharacterTextSplitter(chunk_size=1200, chunk_overlap=100).split_documents(docs)
     vectorstore = Chroma.from_documents(documents=splits, embedding=embeddings)
     
-    context = vectorstore.similarity_search("CASH FLOW OF MEESHO", k=3)
+    context = vectorstore.similarity_search(f"CASH FLOW OF {company_name}", k=3)
     context_text = "".join([d.page_content for d in context])
     
     res = llm.invoke(f"Context: {context_text}\n\nSummarize cash flow with respect to an investor or trader in 100 words.")
@@ -75,7 +74,7 @@ def process_meesho_cashflow(state: GraphState):
 
 
 
-def process_meesho_pl(state: GraphState):
+def process_pl(state: GraphState):
     loader = WebBaseLoader(
         web_path=f"https://www.moneycontrol.com/financials/{company_name}/profit-lossVI/{company_id}#{company_id}",
         bs_kwargs={"parse_only": bs4.SoupStrainer(class_=("mctable1"))},
@@ -90,7 +89,7 @@ def process_meesho_pl(state: GraphState):
     res = llm.invoke(f"Context: {context_text}\n\nSummarize P&L with respect to an investor who wants to invest in 50 words.")
     return {"summaries": [f"--- {company_name} P&L ---\n{res.content}"]}
 
-def process_tata_stocks(state:GraphState):
+def process_stocks(state:GraphState):
     loader = WebBaseLoader(
         web_path=f"https://www.moneycontrol.com/financials/{company_name}/balance-sheetVI/{company_id}#{company_id}",
         bs_kwargs={"parse_only": bs4.SoupStrainer(class_=("tab-content"))},
@@ -112,20 +111,20 @@ def process_tata_stocks(state:GraphState):
 workflow = StateGraph(GraphState)
 
 # # 1. Register Nodes
-workflow.add_node("tata_node", process_tata_steel)
-workflow.add_node("meesho_cf_node", process_meesho_cashflow)
-workflow.add_node("meesho_pl_node", process_meesho_pl)
-workflow.add_node("tata_stocks",process_tata_stocks)
-# 2. Add Edges from START to multiple nodes (This enables Parallelism)
-workflow.add_edge(START, "tata_node")
-workflow.add_edge(START, "meesho_cf_node")
-workflow.add_edge(START, "meesho_pl_node")
-workflow.add_edge(START,"tata_stocks")
+workflow.add_node("peers_node", process_peers)
+workflow.add_node("cashflow_node", process_cashflow)
+workflow.add_node("pl_node", process_pl)
+workflow.add_node("stocks_node",process_stocks)
+# 2. Add Edges from START to multiple nodes 
+workflow.add_edge(START, "peers_node")
+workflow.add_edge(START, "cashflow_node")
+workflow.add_edge(START, "pl_node")
+workflow.add_edge(START,"stocks_node")
 # 3. Connect all nodes to END
-workflow.add_edge("tata_node", END)
-workflow.add_edge("meesho_cf_node", END)
-workflow.add_edge("meesho_pl_node", END)
-workflow.add_edge("tata_stocks",END)
+workflow.add_edge("peers_node", END)
+workflow.add_edge("cashflow_node", END)
+workflow.add_edge("pl_node", END)
+workflow.add_edge("stocks_node",END)
 # 4. Compile
 app = workflow.compile()
 
@@ -134,7 +133,7 @@ app = workflow.compile()
 
 # --- Run ---
 if __name__ == "__main__":
-    print("🚀 Running parallel nodes...")
+    print("Running parallel nodes...")
     results = app.invoke({"summaries": []})
     
     for s in results["summaries"]:
