@@ -13,10 +13,41 @@ api_key = os.getenv("MY_API_KEY")
 
 queryApi = QueryApi(api_key)
 
-company_name = "" #Specify the company ticker here, e.g., "AAPL" for Apple Inc.
+import requests
+import yfinance as yf
+
+# Function to get ticker symbol from company name
+def get_ticker(company_name):
+    url = f"https://query2.finance.yahoo.com/v1/finance/search?q={company_name}"
+    # User-agent header is often required to avoid 403 errors
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    
+    try:
+        response = requests.get(url, headers=headers)
+        data = response.json()
+        
+        
+        if data['quotes']:
+            ticker_symbol = data['quotes'][0]['symbol']
+            
+            
+            ticker_info = yf.Ticker(ticker_symbol)
+            return ticker_symbol
+        else:
+            return "No ticker found."
+            
+    except Exception as e:
+        return f"Error: {e}"
+
+company = "NVIDIA"
+ticker = get_ticker(company)
+
+company_ticker = ticker 
 
 query = {
-  "query": f"ticker:{company_name} AND formType:\"10-K\"",
+  "query": f"ticker:{company_ticker} AND formType:\"10-K\"",
   "from": "0",
   "size": "1",
   "sort": [{ "filedAt": { "order": "desc" } }]
@@ -98,9 +129,9 @@ def process_10_K(state: GraphState):
     - Does the company mention "dual-sourcing," "nearshoring," or "inventory stockpiling" as a defense strategy?""")
 
    
-    
-    
-    return {"summaries": [f"--- {company_name} Analysis ---\n{res.content}"]}
+
+
+    return {"summaries": [f"--- {company_ticker} Analysis ---\n{res.content}"]}
     
 
 workflow = StateGraph(GraphState)    
