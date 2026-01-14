@@ -1,3 +1,0 @@
-# Dialectic
-Aryan agrawal
-
