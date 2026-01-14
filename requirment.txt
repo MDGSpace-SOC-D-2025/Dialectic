@@ -1,0 +1,10 @@
+requests
+pandas
+langchain-openai
+langchain-community
+langgraph
+python-dotenv
+sec-api
+yfinance
+praw
+chromadb
