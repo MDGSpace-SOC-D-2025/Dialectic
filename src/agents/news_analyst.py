@@ -171,8 +171,8 @@ def run_news_analysis(ticker: str):
     if link2: workflow.add_edge("link2", "aggregator")
     if link3: workflow.add_edge("link3", "aggregator")
 
-    workflow.add_edge("aggregator", "sentiment_analysis")
-    workflow.add_edge("sentiment_analysis", END)
+    # workflow.add_edge("aggregator", "sentiment_analysis")
+    workflow.add_edge("aggregator", END)
     # Compile
     app = workflow.compile()
 
@@ -183,7 +183,7 @@ def run_news_analysis(ticker: str):
     filename = "News_Analysis.md"
 
     final_report_content = results["summaries"][-2] 
-    final_recommendation = results["summaries"][-1]
+    # final_recommendation = results["summaries"][-1]
 
     markdown_content = f"""# news Analysis Report: {ticker}
 **Date of Analysis:** {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}
@@ -191,7 +191,6 @@ def run_news_analysis(ticker: str):
 ## 1. Automated Component Summaries
 {final_report_content}
 
-{final_recommendation}
 """
     # Write to the file
     with open(filename, "w", encoding="utf-8") as f:
