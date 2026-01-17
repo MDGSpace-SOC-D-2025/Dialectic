@@ -48,8 +48,11 @@ class JudgeNode(BaseComponent):
             "data_context": data_context
         })
 
+        #AI might return a list of bullet points, this code ensures it gets formatted into a nice readable string.
         justification = result.justification
-        if isinstance(justification, list):
+
+        #checks: "Is this variable a list?
+        if isinstance(justification, list): 
             justification = "\n".join(f"- {item}" for item in justification)
 
         return {
