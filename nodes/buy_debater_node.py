@@ -23,11 +23,11 @@ from configuration.debate_constant import (
 class BuyNode(BaseComponent):
     def __init__(self, llm_config, temperature: float = 0.7):
         super().__init__(llm_config, temperature)
-        self.opening_chain = self.create_chain(SYSTEM_PROMPT, OPENING_HUMAN_PROMPT)
-        self.counter_chain = self.create_chain(SYSTEM_PROMPT, COUNTER_HUMAN_PROMPT)
+        self.opening_chain = self.create_chain(SYSTEM_PROMPT, OPENING_HUMAN_PROMPT) #Used at the start. Focuses on presenting a fresh thesis based on data.
+        self.counter_chain = self.create_chain(SYSTEM_PROMPT, COUNTER_HUMAN_PROMPT) #Used later. Focuses on listening to the "Sell" agent and attacking their specific points.
 
     def __call__(self, state: DebateState) -> Dict[str, Any]:
-        super().__call__(state)
+        super().__call__(state) #way of executing the logic of a parent class while passing a specific "state" (data) through it.
 
         debate_topic = state.get("debate_topic")
         messages = state.get("messages", [])
@@ -55,6 +55,7 @@ class BuyNode(BaseComponent):
             raise ValueError(f"Unknown turn for BuyNode: stage={stage}, speaker={speaker}")
         
         new_message = create_debate_message(speaker=SPEAKER_BUY, content=result, stage=stage)
+        #Uses the parent's log_debate_event to print the argument in [green]BUY[/] color in your terminal.
         self.log_debate_event(
             f"[bold]{stage.upper()}[/]\n"
             f"{result}\n",
@@ -65,7 +66,7 @@ class BuyNode(BaseComponent):
             "messages": messages + [new_message]
         }
 
-    def _get_last_message_by(self, speaker_prefix, messages):
+    def _get_last_message_by(self, speaker_prefix, messages): #It scans the chat history backwards (reversed) to find the most recent thing the opponent (SELL) said
         for m in reversed(messages):
             if m.get("speaker") == speaker_prefix:
                 return m["content"]
