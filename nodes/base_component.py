@@ -34,7 +34,7 @@ from rich.logging import RichHandler
 class BaseComponent:
     """
     A foundational class for managing LLM-based workflows with token tracking.
-    Can handle both Azure OpenAI (AzureChatOpenAI) and OpenAI (ChatOpenAI).
+    Can handle OpenAI (ChatOpenAI).
     """
 
     def __init__(
@@ -130,7 +130,7 @@ class BaseComponent:
         retry_wait = 1  # Initial wait time in seconds
 
         for attempt in range(self.max_retries):
-            try:
+            try: #Starts a block of code that might crash
                 with get_openai_callback() as cb:
                     result = self.chain.invoke(inputs)
                     self.logger.info("Prompt Token usage: %s", cb.prompt_tokens)
@@ -148,7 +148,7 @@ class BaseComponent:
                         f"(Attempt {attempt + 1}/{self.max_retries})"
                     )
                     time.sleep(retry_wait)
-                    retry_wait *= 2
+                    retry_wait *= 2 #Exponential Backoff
                 else:
                     self.logger.error(f"Unexpected error: {str(e)}")
                     raise e
