@@ -75,7 +75,7 @@ INTERPRETATION RULES:
 
 • Supply Chain:
   - Discuss resilience, concentration risk, or mitigation only if stated
-  - No speculative geopolitical escalation
+  - speculative geopolitical escalation
 
 • Technical Indicators:
   - RSI or momentum may SUPPORT sentiment, never drive the thesis
