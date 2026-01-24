@@ -18,4 +18,3 @@ class DebateState(TypedDict):
     financial_data: str
     news_data: str
     network_analysis: str
-    supply_chain_data: str

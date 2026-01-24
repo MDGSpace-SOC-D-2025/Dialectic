@@ -9,18 +9,16 @@ project_root = Path(__file__).parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-# Import backend logic
-from main import run_agents_parallel, infer_topic_from_file
+# Import backend logic 
+from main import run_agents_parallel
 from workflow.debate_workflow import DebateWorkflow
 
-# Page Config
 st.set_page_config(
     page_title="Financial Debate Analyst",
     page_icon="🏦",
     layout="wide",
 )
 
-# Custom CSS for Green Finance Theme
 
 
 
@@ -78,21 +76,19 @@ with tab3:
         st.info("No Network Analysis found. Run analysis to generate.")
 
 with tab4:
-    st.subheader("Trading Debate")
+    st.subheader(" Debate")
     
     if st.button("Start Debate"):
-        # Infer topic
-        topic = infer_topic_from_file("Financial_Analysis.md")
-        if not topic:
-            topic = f"Should we buy {ticker} shares?"
+        
+        topic = f"Should we buy {ticker} shares?"
         
         st.write(f"**Topic:** {topic}")
         
-        # Load data
+        
         financial_data = read_markdown_file("Financial_Analysis.md") or ""
         news_data = read_markdown_file("News_Analysis.md") or ""
         network_analysis = read_markdown_file("Network_Analysis.md") or ""
-        supply_chain_data = read_markdown_file("Supply_Chain_Analysis.md") or ""
+        
 
         initial_state = {
             "debate_topic": topic,
@@ -103,7 +99,6 @@ with tab4:
             "financial_data": financial_data,
             "news_data": news_data,
             "network_analysis": network_analysis,
-            "supply_chain_data": supply_chain_data
         }
 
         workflow = DebateWorkflow()

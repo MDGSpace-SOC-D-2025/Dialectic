@@ -76,7 +76,8 @@ REQUIRED STRUCTURE:
 
 STANDARD:
 Your argument must remain credible to a disciplined, long-term investor.
-
+Here is the debate so far:
+{debate_history}
 
 """
 

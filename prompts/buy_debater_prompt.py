@@ -1,5 +1,4 @@
 from pathlib import Path
-
 # Get the path to your financial analysis file
 def read_md_file(path: Path, label: str) -> str:
     """
@@ -13,7 +12,6 @@ def read_md_file(path: Path, label: str) -> str:
         return f"\n\n## {label}\nNo {label.lower()} available."
 
 
-# Paths to analysis files
 financial_path = Path("Financial_Analysis.md")
 news_path = Path("News_Analysis.md")
 network_path = Path("Network_Analysis.md")
@@ -107,7 +105,7 @@ Available Data:
 Give your opening statement explaining why this is a good buy opportunity.
 Keep it concise, persuasive, and grounded in the provided data.
 """
-# Assuming you imported OPENING_HUMAN_PROMPT from buy_debater_prompt.py
+
 formatted_prompt = OPENING_HUMAN_PROMPT.format(
     debate_topic="Debate on buy or sell the stock",
     data_context=financial_data + news_data + network_data

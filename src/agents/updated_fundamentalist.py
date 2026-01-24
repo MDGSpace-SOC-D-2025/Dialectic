@@ -331,7 +331,6 @@ def run_fundamental_analysis(ticker: str):
     markdown_content = f"""# Financial Analysis Report: {ticker}
 **Date of Analysis:** {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}
 
-## 1. Automated Component Summaries
 {final_report_content}
 
 

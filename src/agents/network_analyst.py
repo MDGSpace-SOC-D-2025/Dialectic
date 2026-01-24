@@ -83,7 +83,7 @@ def run_network_analysis(ticker: str):
            splits = text_splitter.split_text(response.text)
            # Use a local persistence directory to avoid connection errors
            vectorstore = Chroma.from_texts(texts=splits, embedding=embeddings, collection_name="technical_summary", persist_directory="./chroma_db_tech")
-           retriever = vectorstore.as_retriever(search_kwargs={"k": 2}) # Get top 2 chunks
+           retriever = vectorstore.as_retriever(search_kwargs={"k": 3}) # Get top 3 chunks
            
            relevant_docs = retriever.invoke("What are the key products and technical risks?")
            context = "\n\n".join([doc.page_content for doc in relevant_docs])
@@ -100,7 +100,7 @@ def run_network_analysis(ticker: str):
             text_splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=200)
             splits = text_splitter.split_text(response.text)
             vectorstore = Chroma.from_texts(texts=splits, embedding=embeddings, collection_name="supply_chain_summary", persist_directory="./chroma_db_supply")
-            retriever = vectorstore.as_retriever(search_kwargs={"k": 2})
+            retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
             
             relevant_docs = retriever.invoke("Who are the suppliers, customers, and what are the supply chain risks?")
             context = "\n\n".join([doc.page_content for doc in relevant_docs])
@@ -117,7 +117,7 @@ def run_network_analysis(ticker: str):
             text_splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=200)
             splits = text_splitter.split_text(response.text)
             vectorstore = Chroma.from_texts(texts=splits, embedding=embeddings, collection_name="competitor_summary", persist_directory="./chroma_db_comp")
-            retriever = vectorstore.as_retriever(search_kwargs={"k": 2})
+            retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
             
             relevant_docs = retriever.invoke("Who are the competitors and what is the market position?")
             context = "\n\n".join([doc.page_content for doc in relevant_docs])

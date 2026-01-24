@@ -27,8 +27,6 @@ except ImportError:
     OPENTELEMETRY_AVAILABLE = False
 from debate_state import DebateState
 from configuration.llm_config import OpenAILLMConfig
-from rich.console import Console
-from rich.logging import RichHandler
 
 
 class BaseComponent:
@@ -58,7 +56,6 @@ class BaseComponent:
             tracer = None
 
         self.logger = logger
-        self._configure_rich_logger() 
         self.tracer = tracer
         self.llm: Optional[ChatOpenAI] = None
         self.output_parser: Optional[StrOutputParser] = None
@@ -74,28 +71,10 @@ class BaseComponent:
             self.llm = self._init_llm(llm_config, temperature)
             self.output_parser = StrOutputParser()
 
-    def _configure_rich_logger(self):
-        """Set up Rich logging with styles"""
-        console = Console(width=100, color_system="auto")
-        handler = RichHandler(
-            console=console,
-            show_time=True,
-            show_level=True,
-            markup=True,
-            show_path=False
-        )
-        self.logger.addHandler(handler)
-        self.logger.propagate = False
-
     def log_debate_event(self, message: str, prefix: str = "", style: str = ""):
-        """Centralized rich-formatted logging"""
-        prefix_map = {
-            "BUY": "[green]BUY[/]",
-            "SELL": "[red]SELL[/]",
-            "JUDGE": "[yellow]JUDGE[/]"
-        }
-        styled_msg = f"{prefix_map.get(prefix, prefix)}{' ' + message if message else ''}"
-        self.logger.info(styled_msg, extra={"markup": True})
+        """Centralized standard logging"""
+        msg = f"{prefix} {message if message else ''}"
+        self.logger.info(msg)
 
     def _init_llm(self, config: OpenAILLMConfig, temperature: float):
         """

@@ -98,7 +98,7 @@ def run_news_analysis(ticker: str):
         
         prompt = f"""
         You are a professional financial advisor. Based on the following news, 
-        write a comprehensive 300-word investment summary for a person who wants 
+        write a comprehensive 400-word investment summary for a person who wants 
         to buy or sell shares of {ticker}. 
         Focus on market position, growth drivers, and potential risks.
         In potential risks consider macroeconomic, geopolitical and manufacturing factors as well.
@@ -178,17 +178,16 @@ def run_news_analysis(ticker: str):
 
 
 
-    results = app.invoke({"summaries": []})
+    results = app.invoke({"final_report": []})
        
     filename = "News_Analysis.md"
 
-    final_report_content = results["summaries"][-2] 
+    final_report_content = results["final_report"] 
     # final_recommendation = results["summaries"][-1]
 
     markdown_content = f"""# news Analysis Report: {ticker}
 **Date of Analysis:** {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}
 
-## 1. Automated Component Summaries
 {final_report_content}
 
 """

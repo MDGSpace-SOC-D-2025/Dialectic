@@ -36,9 +36,11 @@ class SellNode(BaseComponent):
 
         if stage == STAGE_REBUTTAL and speaker == SPEAKER_SELL:
             opponent_msg = self._get_last_message_by(SPEAKER_BUY, messages)
+            debate_history = get_debate_history(messages)
             result = self.rebuttal_chain.invoke({
                 "debate_topic": debate_topic,
                 "opponent_statement": opponent_msg,
+                "debate_history": debate_history,
                 "data_context": data_context
             })
 
