@@ -23,19 +23,19 @@ st.set_page_config(
 
 
 
-st.title("🏦 Financial Analysis & Debate System")
+st.title("🏦 FINANCIAL ANALYSIS & DEBATE SYSTEM")
 
 # Sidebar for controls
 with st.sidebar:
     st.header("Configuration")
-    ticker = st.text_input("Enter Stock Ticker (e.g., NVDA):", value="NVDA").upper()
+    ticker = st.text_input("ENTER THE STOCK TICKER (e.g., NVDA):", value="NVDA").upper()
 
-    if st.button("Run Full Analysis"):
+    if st.button("RUN FULL ANALYSIS"):
         if ticker:
             with st.spinner(f"Running financial, news, and network analysis for {ticker}..."):
                 # Run the async function
                 asyncio.run(run_agents_parallel(ticker))
-            st.success("Analysis Complete!")
+            st.success("ANALYSIS COMPLETE!!")
         else:
             st.warning("Please enter a ticker.")
 

@@ -53,7 +53,7 @@ def run_network_analysis(ticker: str):
 
     # Initialize LLM and Embeddings
     llm = ChatOpenAI(
-        model="mistralai/devstral-2512:free",
+        model="xiaomi/mimo-v2-flash:free",
         temperature=0,
         api_key=os.environ.get("OPENROUTER_API_KEY"),
         base_url=os.environ.get("OPENAI_API_BASE"),
@@ -205,7 +205,6 @@ def run_network_analysis(ticker: str):
     final_report_content = results["final_report"] 
 
     markdown_content = f"""# Network Analysis Report: {ticker}
-**Date of Analysis:** {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}
 
 ## 1. Automated Component Summaries
 {final_report_content}

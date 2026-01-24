@@ -329,7 +329,6 @@ def run_fundamental_analysis(ticker: str):
     # final_recommendation = results["summaries"][7]
 
     markdown_content = f"""# Financial Analysis Report: {ticker}
-**Date of Analysis:** {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}
 
 {final_report_content}
 

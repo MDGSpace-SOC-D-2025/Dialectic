@@ -8,3 +8,7 @@ sec-api
 yfinance
 praw
 chromadb
+streamlit
+langchain-chroma
+langchain-text-splitters
+beautifulsoup4
