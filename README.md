@@ -25,7 +25,6 @@ An AI-powered system that performs multi-agent market analysis on stock tickers 
 1.  **Clone the repository**
     ```bash
     git clone https://github.com/MDGSpace-SOC-D-2025/Dialectic.git
-    cd MDG
     ```
 
 2.  **Install dependencies**
