@@ -12,7 +12,7 @@ An AI-powered system that performs multi-agent market analysis on stock tickers 
 *   **Verdict Generation**: A "Judge" agent analyzes the debate history to output a final "Buy" or "Sell" recommendation.
     *   **Dashboard**: A `Streamlit` powered interactive UI for visualizing reports and the debate process.
 
-![Multi-Agent System Architecture Flowchart](workflow/workflow_.png)
+![Multi-Agent System Architecture Flowchart](workflow_.png)
 
 ## 📋 Prerequisites
 
