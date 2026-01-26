@@ -194,7 +194,6 @@ def run_network_analysis(ticker: str):
     final_report_content = results["final_report"] 
 
     markdown_content = f"""# Network Analysis Report: {ticker}
-## 1. Automated Component Summaries
 {final_report_content}
 
 """

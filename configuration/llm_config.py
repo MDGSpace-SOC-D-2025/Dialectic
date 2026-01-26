@@ -16,7 +16,7 @@ class OpenAILLMConfig:
 
 llm_config_map = {
     "gpt-4o": OpenAILLMConfig(
-        model="mistralai/devstral-2512:free",
+        model="xiaomi/mimo-v2-flash:free",
         api_key=os.environ.get("OPENROUTER_API_KEY"),
         base_url=os.environ.get("OPENAI_API_BASE"),
         
