@@ -6,4 +6,3 @@ chroma_db/
 venv/
 __pycache__/
 *.pyc
-debug.log

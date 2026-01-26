@@ -185,8 +185,7 @@ def run_news_analysis(ticker: str):
     final_report_content = results["final_report"] 
     # final_recommendation = results["summaries"][-1]
 
-    markdown_content = f"""# news Analysis Report: {ticker}
-**Date of Analysis:** {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}
+    markdown_content = f"""# News Analysis Report: {ticker}
 
 {final_report_content}
 

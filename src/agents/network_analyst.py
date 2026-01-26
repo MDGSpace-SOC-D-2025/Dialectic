@@ -81,11 +81,10 @@ def run_network_analysis(ticker: str):
         try:
            text_splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=200)
            splits = text_splitter.split_text(response.text)
-           # Use a local persistence directory to avoid connection errors
            vectorstore = Chroma.from_texts(texts=splits, embedding=embeddings, collection_name="technical_summary", persist_directory="./chroma_db_tech")
            retriever = vectorstore.as_retriever(search_kwargs={"k": 3}) # Get top 3 chunks
            
-           relevant_docs = retriever.invoke("What are the key products and technical risks?")
+           relevant_docs = retriever.invoke("What are the key products and technical risks? Item 1A")
            context = "\n\n".join([doc.page_content for doc in relevant_docs])
            
            res = llm.invoke(f"Context: {context}\n\nSummarize the key product segments and technical risks in 150 words.")
@@ -102,7 +101,7 @@ def run_network_analysis(ticker: str):
             vectorstore = Chroma.from_texts(texts=splits, embedding=embeddings, collection_name="supply_chain_summary", persist_directory="./chroma_db_supply")
             retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
             
-            relevant_docs = retriever.invoke("Who are the suppliers, customers, and what are the supply chain risks?")
+            relevant_docs = retriever.invoke("Who are the suppliers, customers, and what are the supply chain risks? Item 1A")
             context = "\n\n".join([doc.page_content for doc in relevant_docs])
             
             res = llm.invoke(f"Context: {context}\n\nSummarize the major customers, suppliers, and supply chain dependencies in 150 words.")
@@ -119,7 +118,7 @@ def run_network_analysis(ticker: str):
             vectorstore = Chroma.from_texts(texts=splits, embedding=embeddings, collection_name="competitor_summary", persist_directory="./chroma_db_comp")
             retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
             
-            relevant_docs = retriever.invoke("Who are the competitors and what is the market position?")
+            relevant_docs = retriever.invoke("Who are the competitors and what is the market position? Item 1A")
             context = "\n\n".join([doc.page_content for doc in relevant_docs])
             
             res = llm.invoke(f"Context: {context}\n\nSummarize the key competitors and market risks in 150 words.")
@@ -188,24 +187,13 @@ def run_network_analysis(ticker: str):
 
 
     inputs = {"technical_summary": "", "supply_chain_summary": "", "competitor_summary": ""}
-    # if __name__ == "__main__":
-    #     print(f"Analysing 10-K for {ticker}...")
+  
     results = app.invoke(inputs)
-        
-        # print("\n" + "="*60)
-        # print(f"NETWORK ANALYSIS REPORT: {ticker}")
-        # print("="*60)
-        # print(results["final_report"])
-
-     # --- SAVING TO MARKDOWN FILE ---
-
-    # Create a filename based on the ticker
     filename = "Network_Analysis.md"
     
     final_report_content = results["final_report"] 
 
     markdown_content = f"""# Network Analysis Report: {ticker}
-
 ## 1. Automated Component Summaries
 {final_report_content}
 

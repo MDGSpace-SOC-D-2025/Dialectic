@@ -1,16 +1,12 @@
 from pathlib import Path
 # Get the path to your financial analysis file
 def read_md_file(path: Path, label: str) -> str:
-    """
-    Safely read a markdown file and wrap it with a clear section header.
-    """
     if path.exists():
         with open(path, "r", encoding="utf-8") as f:
             content = f.read().strip()
         return f"\n\n## {label}\n{content}"
     else:
         return f"\n\n## {label}\nNo {label.lower()} available."
-
 
 financial_path = Path("Financial_Analysis.md")
 news_path = Path("News_Analysis.md")
@@ -19,10 +15,6 @@ network_path = Path("Network_Analysis.md")
 financial_data = read_md_file(financial_path, "FINANCIAL ANALYSIS")
 news_data = read_md_file(news_path, "NEWS ANALYSIS")
 network_data = read_md_file(network_path, "NETWORK / SUPPLY CHAIN ANALYSIS")
-
-
-
-
 
 
 SYSTEM_PROMPT = """You are a BUY-SIDE investment analyst in a structured debate.

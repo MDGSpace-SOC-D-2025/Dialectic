@@ -8,8 +8,6 @@ from pathlib import Path
 project_root = Path(__file__).parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
-
-# Import backend logic 
 from main import run_agents_parallel
 from workflow.debate_workflow import DebateWorkflow
 
@@ -21,11 +19,8 @@ st.set_page_config(
 
 
 
-
-
 st.title("🏦 FINANCIAL ANALYSIS & DEBATE SYSTEM")
 
-# Sidebar for controls
 with st.sidebar:
     st.header("Configuration")
     ticker = st.text_input("ENTER THE STOCK TICKER (e.g., NVDA):", value="NVDA").upper()
@@ -42,7 +37,6 @@ with st.sidebar:
 # Main Display Area
 st.header(f"Analysis Results: {ticker}")
 
-# Tabs for different analysis reports
 tab1, tab2, tab3, tab4 = st.tabs(["Financial data", "News data", "Network data", "Debate loop"])
 
 def read_markdown_file(filename):

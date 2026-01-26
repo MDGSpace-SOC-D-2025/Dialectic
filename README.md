@@ -39,7 +39,7 @@ An AI-powered system that performs multi-agent market analysis on stock tickers 
     OPENROUTER_API_KEY=your_api_key_here
     OPENAI_API_BASE= "https://openrouter.ai/api/v1"
 
-    MY_API_KEY = your_api_key_here
+    MY_API_KEY = your_api_key_here (sec api key)
     ALPHA_VANTAGE_API_KEY = your_api_key_here
     ```
 

@@ -16,10 +16,6 @@ from pydantic import BaseModel, Field
 class DebateVerdict(BaseModel):
     """
     Judgment of a trading debate based on analytical performance.
-
-    Attributes:
-        winner (Literal): Either 'buy' or 'sell', indicating which position was more convincing.
-        justification (str): The reason for the judgment, focusing on data analysis, logical reasoning, and argument quality.
     """
 
     winner: Literal["buy", "sell"] = Field(
@@ -51,7 +47,6 @@ class JudgeNode(BaseComponent):
         #AI might return a list of bullet points, this code ensures it gets formatted into a nice readable string.
         justification = result.justification
 
-        #checks: "Is this variable a list?
         if isinstance(justification, list): 
             justification = "\n".join(f"- {item}" for item in justification)
 

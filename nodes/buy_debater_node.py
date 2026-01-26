@@ -29,6 +29,7 @@ class BuyNode(BaseComponent):
     def __call__(self, state: DebateState) -> Dict[str, Any]:
         super().__call__(state) #way of executing the logic of a parent class while passing a specific "state" (data) through it.
 
+        # Accesing all the data from the state dictionary in DebateState
         debate_topic = state.get("debate_topic")
         messages = state.get("messages", [])
         stage = state.get("stage")
