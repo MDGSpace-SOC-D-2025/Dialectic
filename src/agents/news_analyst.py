@@ -32,17 +32,11 @@ def run_news_analysis(ticker: str):
     # Initialize LLM and Embeddings
     llm = ChatOpenAI(
         
-        model="xiaomi/mimo-v2-flash:free",
+        model="mistralai/devstral-2512:free",
         temperature=0,
         api_key=os.environ.get("OPENROUTER_API_KEY"),
         base_url=os.environ.get("OPENAI_API_BASE"),
         max_completion_tokens=1000,
-    )
-
-    embeddings = OpenAIEmbeddings(
-        model="text-embedding-3-small", 
-        api_key=os.environ.get("OPENROUTER_API_KEY"),
-        base_url=os.environ.get("OPENAI_API_BASE"),
     )
 
 
@@ -194,7 +188,7 @@ def run_news_analysis(ticker: str):
     with open(filename, "w", encoding="utf-8") as f:
         f.write(markdown_content)
 
-    print(f"\n✅ Analysis successfully saved to {filename}")
+    print(f"\nAnalysis successfully saved to {filename}")
     return filename
 
 if __name__ == "__main__":

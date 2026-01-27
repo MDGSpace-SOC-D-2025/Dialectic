@@ -191,12 +191,12 @@ def run_fundamental_analysis(ticker: str):
     if "data" in response6 and len(response6["data"]) > 0:
         federal_funds_data = response6["data"][0]
     else:
-        print(f"⚠️ Warning: Could not fetch Fed Rate data. API Response: {response6}")
+        print(f"Warning: Could not fetch Fed Rate data. API Response: {response6}")
         federal_funds_data = {"value": "N/A", "date": "N/A"} # Default fallback
 
     # 2. Define your LLM
     llm = ChatOpenAI(
-        model="xiaomi/mimo-v2-flash:free",#mistralai/devstral-2512:free",
+        model="mistralai/devstral-2512:free",#mistralai/devstral-2512:free",
         temperature=0,
         api_key=os.environ.get("OPENROUTER_API_KEY"),
         base_url=os.environ.get("OPENAI_API_BASE"),
@@ -339,7 +339,7 @@ def run_fundamental_analysis(ticker: str):
     with open(filename, "w", encoding="utf-8") as f:
         f.write(markdown_content)
 
-    print(f"\n✅ Analysis successfully saved to {filename}")
+    print(f"\n Analysis successfully saved to {filename}")
     return filename
 
 if __name__ == "__main__":
