@@ -196,7 +196,7 @@ def run_fundamental_analysis(ticker: str):
 
     # 2. Define your LLM
     llm = ChatOpenAI(
-        model="mistralai/devstral-2512:free",#mistralai/devstral-2512:free",
+        model="nvidia/nemotron-nano-9b-v2:free",#mistralai/devstral-2512:free",
         temperature=0,
         api_key=os.environ.get("OPENROUTER_API_KEY"),
         base_url=os.environ.get("OPENAI_API_BASE"),

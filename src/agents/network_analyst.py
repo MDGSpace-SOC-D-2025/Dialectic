@@ -53,7 +53,7 @@ def run_network_analysis(ticker: str):
 
     # Initialize LLM and Embeddings
     llm = ChatOpenAI(
-        model="mistralai/devstral-2512:free",
+        model="nvidia/nemotron-nano-12b-v2-vl:free",
         temperature=0,
         api_key=os.environ.get("OPENROUTER_API_KEY"),
         base_url=os.environ.get("OPENAI_API_BASE"),
