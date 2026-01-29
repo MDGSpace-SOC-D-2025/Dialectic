@@ -16,7 +16,7 @@ class OpenAILLMConfig:
 
 llm_config_map = {
     "gpt-4o": OpenAILLMConfig(
-        model="vidia/nemotron-nano-9b-v2:free",
+        model="nvidia/nemotron-nano-9b-v2:free",
         api_key=os.environ.get("OPENROUTER_API_KEY"),
         base_url=os.environ.get("OPENAI_API_BASE"),
         

@@ -6,3 +6,5 @@ chroma_db/
 venv/
 __pycache__/
 *.pyc
+chroma_db_*/
+*.log
