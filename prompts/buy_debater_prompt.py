@@ -94,30 +94,16 @@ You are arguing the BUY side.
 Available Data:
 {data_context}
 
-Give your opening statement explaining why this is a good buy opportunity.
-Keep it concise, persuasive, and grounded in the provided data.
+Give your comprehensive opening statement explaining why this is a COMPELLING buy opportunity.
+Since this is your ONLY opportunity to speak, you must:
+1. Construct a complete, self-standing thesis based on the strongest data points.
+2. Anticipate potential risks and address them proactively (pre-buttal).
+3. Synthesize financial, news, and macro data into a decisive argument.
+4. Keep it professional, data-centric, and persuasive.
 """
 
 formatted_prompt = OPENING_HUMAN_PROMPT.format(
     debate_topic="Debate on buy or sell the stock",
     data_context=financial_data + news_data + network_data
-)    
-
-
-COUNTER_HUMAN_PROMPT = """\
-Trading Decision: {debate_topic}
-
-Your opponent (SELL side) recently said:
-"{opponent_statement}"
-
-Here is the debate so far:
-{debate_history}
-
-Available Data:
-{data_context}
-
-As the BUY side, craft a persuasive and logical counter-argument.
-Address your opponent's key points directly, and reinforce the strength of your buy position using the available data.
-Keep your tone formal and data-driven, and aim to strengthen your case.
-"""
+)
 

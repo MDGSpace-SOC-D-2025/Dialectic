@@ -14,7 +14,6 @@ from configuration.debate_constant import (
 from prompts.sell_debater_prompt import (
     SYSTEM_PROMPT,
     REBUTTAL_HUMAN_PROMPT,
-    FINAL_ARGUMENT_HUMAN_PROMPT,
 )
 from utils import create_debate_message, get_debate_history, format_data_context
 
@@ -22,7 +21,6 @@ class SellNode(BaseComponent):
     def __init__(self, llm_config, temperature: float = 0.7):
         super().__init__(llm_config, temperature)
         self.rebuttal_chain = self.create_chain(SYSTEM_PROMPT, REBUTTAL_HUMAN_PROMPT)
-        self.final_argument_chain = self.create_chain(SYSTEM_PROMPT, FINAL_ARGUMENT_HUMAN_PROMPT)
 
     def __call__(self, state: DebateState) -> Dict[str, Any]:
         super().__call__(state)
@@ -40,14 +38,6 @@ class SellNode(BaseComponent):
             result = self.rebuttal_chain.invoke({
                 "debate_topic": debate_topic,
                 "opponent_statement": opponent_msg,
-                "debate_history": debate_history,
-                "data_context": data_context
-            })
-
-        elif stage == STAGE_FINAL_ARGUMENT and speaker == SPEAKER_SELL:
-            debate_history = get_debate_history(messages)
-            result = self.final_argument_chain.invoke({
-                "debate_topic": debate_topic,
                 "debate_history": debate_history,
                 "data_context": data_context
             })

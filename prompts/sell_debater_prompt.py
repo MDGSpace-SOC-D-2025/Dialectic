@@ -85,34 +85,19 @@ Here is the debate so far:
 REBUTTAL_HUMAN_PROMPT = """\
 Trading Decision: {debate_topic}
 
-Your opponent (BUY side) recently stated:
+Your opponent (BUY side) has just presented their opening case:
 "{opponent_statement}"
 
 Available Data:
 {data_context}
 
-You are representing the **SELL** position.
+You are representing the **SELL** position. This is your ONLY chance to speak.
+You must dismantle the Buy side's argument and establish a definitive Sell thesis.
 
-Craft a clear and logical rebuttal that directly addresses your opponent's argument.
-Use the provided data, reasoning, and persuasive language to highlight risks or negative factors in the BUY position.
-
-Keep your tone formal and focused.
-"""
-
-
-FINAL_ARGUMENT_HUMAN_PROMPT = """\
-Trading Decision: {debate_topic}
-
-Here is the debate so far:
-{debate_history}
-
-Available Data:
-{data_context}
-
-You are the SELL side. This is your final statement.
-
-You may summarize and reinforce your strongest arguments, or directly challenge the BUY position one last time using the available data.
-
-Deliver a clear and impactful closing statement that leaves a lasting impression about why selling is the right decision.
+Instructions:
+1. **Direct Rebuttal**: SYSTEMATICALLY attack the Buy side's points. Expose weaknesses, missing context, or overly optimistic assumptions in their argument using the provided data.
+2. **Sell Thesis**: Present your own independent reasons to sell (valuation risks, macro headwinds, weak fundamentals) even if the Buy side didn't mention them.
+3. **Closing Quality**: Your response will go directly to the Judge. Make it a closing argument that leaves no doubt that the risks outweigh the rewards.
+4. **Tone**: Be incisive, skeptical, and strictly data-driven.
 """
 

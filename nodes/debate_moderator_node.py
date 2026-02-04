@@ -26,16 +26,6 @@ class DebateModeratorNode:
             )
         elif stage == STAGE_REBUTTAL and speaker == SPEAKER_SELL:
             return Command(
-                update={"stage": STAGE_COUNTER, "speaker": SPEAKER_BUY},
-                goto=NODE_BUY_DEBATER
-            )
-        elif stage == STAGE_COUNTER and speaker == SPEAKER_BUY:
-            return Command(
-                update={"stage": STAGE_FINAL_ARGUMENT, "speaker": SPEAKER_SELL},
-                goto=NODE_SELL_DEBATER
-            )
-        elif stage == STAGE_FINAL_ARGUMENT and speaker == SPEAKER_SELL:
-            return Command(
                 update={},
                 goto=NODE_JUDGE
             )

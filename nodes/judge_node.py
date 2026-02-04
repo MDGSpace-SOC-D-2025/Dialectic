@@ -21,7 +21,7 @@ class DebateVerdict(BaseModel):
     winner: Literal["buy", "sell"] = Field(
         description="Indicates the winner of the debate. Must be 'buy' or 'sell'."
     )
-    justification: Union[str, List[str]] = Field(
+    justification: Any = Field(
         description="A concise explanation or list of points explaining why this position won. Focus on data analysis quality, logical reasoning, and argument strength."
     )
 
@@ -48,7 +48,9 @@ class JudgeNode(BaseComponent):
         justification = result.justification
 
         if isinstance(justification, list): 
-            justification = "\n".join(f"- {item}" for item in justification)
+            # Filter valid strings and convert others
+            valid_items = [str(item) for item in justification if item and isinstance(item, (str, int, float))]
+            justification = "\n".join(f"- {item}" for item in valid_items)
 
         return {
             "judge_verdict": result.model_dump() if hasattr(result, 'model_dump') else result.dict(),
