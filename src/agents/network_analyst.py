@@ -1,15 +1,13 @@
+from langchain_community.document_loaders import WebBaseLoader
 import os
-from typing import  TypedDict
 from dotenv import load_dotenv
 load_dotenv()
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-
 from langchain_chroma import Chroma
-from langgraph.graph import StateGraph, END, START
 from sec_api import QueryApi
-import pandas as pd
-import requests
+import requests 
+
 
 os.environ['USER_AGENT'] = 'DD'
 
@@ -66,144 +64,75 @@ def run_network_analysis(ticker: str):
         base_url=os.environ.get("OPENAI_API_BASE"),
     )
 
-    class GraphState(TypedDict):
-        technical_summary: str
-        supply_chain_summary: str
-        competitor_summary: str
-        final_report: str
+    loader = WebBaseLoader(web_paths=[url_filing])
 
+    docs = loader.load()
+    # print(docs)
+    text_splitter = RecursiveCharacterTextSplitter(
+        separators=["\n\n", "\n", ".", " "],
+        chunk_size=2000,
+        chunk_overlap=100,
+        add_start_index=True,
+    )
 
-#   Node Functions 
-
-    def analyze_technical(state: GraphState):
-        """Analyzes Technical Risks & Product Segments"""
-        # Load and split text specifically for this query (simulated retrieval)
-        try:
-           text_splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=200)
-           splits = text_splitter.split_text(response.text)
-           vectorstore = Chroma.from_texts(texts=splits, embedding=embeddings, collection_name="technical_summary", persist_directory="./chroma_db_tech")
-           retriever = vectorstore.as_retriever(search_kwargs={"k": 3}) # Get top 3 chunks
-           
-           relevant_docs = retriever.invoke("What are the key products and technical risks? Item 1A")
-           context = "\n\n".join([doc.page_content for doc in relevant_docs])
-           
-           res = llm.invoke(f"Context: {context}\n\nSummarize the key product segments and technical risks in 150 words.")
-           return {"technical_summary": res.content}
-        except Exception as e:
-            print(f"Error in technical analysis: {e}")
-            return {"technical_summary": "Error analyzing technical risks."}
-
-    def analyze_supply_chain(state: GraphState):
-        """Analyzes Supply Chain & Dependency Risks"""
-        try:
-            text_splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=200)
-            splits = text_splitter.split_text(response.text)
-            vectorstore = Chroma.from_texts(texts=splits, embedding=embeddings, collection_name="supply_chain_summary", persist_directory="./chroma_db_supply")
-            retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
-            
-            relevant_docs = retriever.invoke("Who are the suppliers, customers, and what are the supply chain risks? Item 1A")
-            context = "\n\n".join([doc.page_content for doc in relevant_docs])
-            
-            res = llm.invoke(f"Context: {context}\n\nSummarize the major customers, suppliers, and supply chain dependencies in 150 words.")
-            return {"supply_chain_summary": res.content}
-        except Exception as e:
-             print(f"Error in supply chain analysis: {e}")
-             return {"supply_chain_summary": "Error analyzing supply chain."}
-
-    def analyze_competition(state: GraphState):
-        """Analyzes Competitors & Market Position"""
-        try: 
-            text_splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=200)
-            splits = text_splitter.split_text(response.text)
-            vectorstore = Chroma.from_texts(texts=splits, embedding=embeddings, collection_name="competitor_summary", persist_directory="./chroma_db_comp")
-            retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
-            
-            relevant_docs = retriever.invoke("Who are the competitors and what is the market position? Item 1A")
-            context = "\n\n".join([doc.page_content for doc in relevant_docs])
-            
-            res = llm.invoke(f"Context: {context}\n\nSummarize the key competitors and market risks in 150 words.")
-            return {"competitor_summary": res.content}
-        except Exception as e:
-                print(f"Error in competitor analysis: {e}")
-                return {"competitor_summary": "Error analyzing competition."}
-
-
-    def final_aggregator(state: GraphState):
-        """Synthesizes all summaries into a final report."""
-        tech = state.get("technical_summary", "No data")
-        supply = state.get("supply_chain_summary", "No data")
-        comp = state.get("competitor_summary", "No data")
-        
-        prompt = f"""
-        Role: Supply Chain & Network Analyst.
-        Task: Synthesize the 10-K analysis for {ticker}.
-    
-        Segments:
-        1. Product & Technical Risks:
-        {tech}
-    
-        2. Supply Chain & Dependencies:
-        {supply}
-    
-        3. Competition & Market:
-        {comp}
-        
-        Output: A structured 400-word Strategic Network Risk Report.
-        Format your response exactly as follows:
-        --- NETWORK & RISK ANALYSIS ---
-        - FINAL RISK COMPOSITE: [Low/Medium/High based on dependencies and competition]
-        - MOAT STATUS: [Wide/Narrow/None]
-        - KEY SUPPLIER RISKS: [Bullet points]
-        - KEY CUSTOMER CONCENTRATION: [Bullet points]
-        - COMPETITIVE THREATS: [Bullet points]
-        - JUSTIFICATION: [Summary of the network stability]
-        """
-        
-        res = llm.invoke(prompt)
-        return {"final_report": res.content}
-
-
-    #Build the Graph
-
-    workflow = StateGraph(GraphState)
-
-    workflow.add_node("technical", analyze_technical)
-    workflow.add_node("supply_chain", analyze_supply_chain)
-    workflow.add_node("competition", analyze_competition)
-    workflow.add_node("aggregator", final_aggregator)
-
-    workflow.add_edge(START, "technical")
-    workflow.add_edge(START, "supply_chain")
-    workflow.add_edge(START, "competition")
-
-    workflow.add_edge("technical", "aggregator")
-    workflow.add_edge("supply_chain", "aggregator")
-    workflow.add_edge("competition", "aggregator")
-
-    workflow.add_edge("aggregator", END)
-
-    # Compile
-    app = workflow.compile()
-
-
-    inputs = {"technical_summary": "", "supply_chain_summary": "", "competitor_summary": ""}
-  
-    results = app.invoke(inputs)
-    filename = "Network_Analysis.md"
-    
-    final_report_content = results["final_report"] 
-
-    markdown_content = f"""# Network Analysis Report: {ticker}
-{final_report_content}
-
+    chunks = text_splitter.split_documents(docs)
+    vectorstore = Chroma.from_documents(
+        documents=chunks,
+        embedding=embeddings,
+        persist_directory="./.chroma_db"
+    )
+    queries="""Item 1A, Risk Factors Risks Related to Our Industry and Markets Risks Related to Our Global Operating Business Risks Related to Demand, Supply, and Manufacturing, Risks Related to Regulatory, Legal, Our Stock and Other Matters
+    Item 1. Business Our Markets Sales and Marketing
 """
+    retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 5})
+    relevant_docs = retriever.invoke(queries)
+    # print(relevant_docs)
+    context=''.join([doc.page_content for doc in relevant_docs])
+    # print(context)
+    response=llm.invoke(
+        f"""
+        You are a Senior Equity Research Analyst specializing in technology and semiconductor markets. 
 
-    # Write to the file
-    with open(filename, "w", encoding="utf-8") as f:
-        f.write(markdown_content)
+Your task is to synthesize the provided excerpts from the company's SEC 10-K filing into a professional, high-level Summary   for institutional investors.
 
-    print(f"\n Analysis successfully saved to {filename}")
-    return filename
+Structure your analysis into the following four thematic sections:
+1. **Industry, Market, and Competitive Headwinds**
+2. **Manufacturing, Supply Chain, and Third-Party Dependencies**
+3. **Geopolitical, Regulatory, and Global Operations**
+4. **Emerging Technologies and Product Innovation Risks**
+
+**Formatting & Style Requirements:**
+- **Tone**: Formal, objective, and analytical. Use professional financial terminology.
+- **Length**: Aim for a comprehensive narrative of approximately 450 to 500 words.
+- **Detail**: Do not just list risks; explain the *potential impact* on financial performance (e.g., margin compression, revenue volatility, or market share erosion).
+- **Specificity**: Mention specific risks like export controls, concentration at foundries, and the transition to new architectures (e.g., Blackwell) if present in the text.
+
+**Context:**
+{context}
+
+final analysis: 
+
+        """
+    )
+    analysis = response.content
+    filename = f"Network_Analysis.md"
+    try:
+        with open(filename, "w", encoding="utf-8") as f:
+            # Adding a header to the Markdown file
+            f.write(f"# SEC 10-K Risk Factor Analysis: {ticker}\n")
+            f.write("--- \n\n")
+            f.write(analysis)
+            
+        print(f"\nSuccessfully saved analysis to {filename}")
+    except Exception as e:
+        print(f"Error saving to file: {e}")
+
+
+
 
 if __name__ == "__main__":
-    run_network_analysis("NVDA")
+    run_network_analysis("NVDA")      
+
+     
+    
+
