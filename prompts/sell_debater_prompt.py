@@ -1,15 +1,21 @@
 from pathlib import Path
 
-# Get the path to your financial analysis file
-file_path = Path("Financial_Analysis.md")
+def read_md_file(path: Path, label: str) -> str:
+    if path.exists():
+        with open(path, "r", encoding="utf-8") as f:
+            content = f.read().strip()
+        return f"\n\n## {label}\n{content}"
+    else:
+        return f"\n\n## {label}\nNo {label.lower()} available."
 
-# Read the content
-if file_path.exists():
-    with open(file_path, "r") as f:
-        financial_data = f.read()
-else:
-    financial_data = "No financial data available."
-    
+financial_path = Path("Financial_Analysis.md")
+news_path = Path("News_Analysis.md")
+network_path = Path("Network_Analysis.md")
+
+financial_data = read_md_file(financial_path, "FINANCIAL ANALYSIS")
+news_data = read_md_file(news_path, "NEWS ANALYSIS")
+network_data = read_md_file(network_path, "NETWORK / SUPPLY CHAIN ANALYSIS")
+
 
 
 
@@ -100,4 +106,10 @@ Instructions:
 3. **Closing Quality**: Your response will go directly to the Judge. Make it a closing argument that leaves no doubt that the risks outweigh the rewards.
 4. **Tone**: Be incisive, skeptical, and strictly data-driven.
 """
+
+formatted_prompt = REBUTTAL_HUMAN_PROMPT.format(
+    debate_topic="Debate on buy or sell the stock",
+    data_context=financial_data + news_data + network_data,
+)
+
 
