@@ -110,6 +110,6 @@ Instructions:
 formatted_prompt = REBUTTAL_HUMAN_PROMPT.format(
     debate_topic="Debate on buy or sell the stock",
     data_context=financial_data + news_data + network_data,
+    opponent_statement="",
 )
-
 
