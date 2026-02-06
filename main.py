@@ -61,14 +61,9 @@ async def main():
     else:
         print("No ticker provided. Using existing local analysis files if available.")
     
-    debate_topic = None
-    if not debate_topic:
-        if user_ticker:
-            debate_topic = f"Should we buy {user_ticker}?"
-        else:
-            debate_topic = "General Market Debate"
-            print(f"WARNING: Could not infer topic. Using default: {debate_topic}")
-
+    
+    debate_topic = f"Should we buy shares of {user_ticker}?"
+    
     print(f" Debate Topic: {debate_topic}")
 
     #  Load Data from Markdown Files
@@ -105,16 +100,14 @@ async def main():
         "messages": [],
         "current_speaker": "buy_debater_node",
         "turn_count": 0,
-        "max_turns": 8,
+        "max_turns": 2,
         "financial_data": financial_data,
         "news_data": news_data,
         "network_analysis": network_analysis,
     }
 
     # Run Debate
-    print("Starting trading debate workflow...")
-    print(f"Trading Decision: {debate_topic}")
-    
+    print("Starting trading debate workflow...")    
     try:
         workflow_result = await workflow.run(initial_state)
         
