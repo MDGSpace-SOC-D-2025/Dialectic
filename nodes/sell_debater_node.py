@@ -8,7 +8,7 @@ from nodes.base_component import BaseComponent
 from debate_state import DebateState
 from typing import Dict, Any
 from configuration.debate_constant import (
-    STAGE_REBUTTAL, STAGE_FINAL_ARGUMENT,
+    STAGE_REBUTTAL,
     SPEAKER_SELL, SPEAKER_BUY
 )
 from prompts.sell_debater_prompt import (
@@ -16,7 +16,7 @@ from prompts.sell_debater_prompt import (
     REBUTTAL_HUMAN_PROMPT,
 )
 from utils import create_debate_message, get_debate_history, format_data_context
-
+  
 class SellNode(BaseComponent):
     def __init__(self, llm_config, temperature: float = 0.7):
         super().__init__(llm_config, temperature)
@@ -39,7 +39,7 @@ class SellNode(BaseComponent):
                 "debate_topic": debate_topic,
                 "opponent_statement": opponent_msg,
                 "debate_history": debate_history,
-                "data_context": data_context
+                "data_context": data_context 
             })
 
         else:

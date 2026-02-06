@@ -10,7 +10,7 @@ from prompts.judge_prompt import JUDGE_SYSTEM_PROMPT, JUDGE_HUMAN_PROMPT
 from utils import get_debate_history, format_data_context
 from configuration.debate_constant import SPEAKER_JUDGE
 from debate_state import DebateState
-from typing import Dict, Any, Literal, Union, List
+from typing import Dict, Any, Literal
 from pydantic import BaseModel, Field
 
 class DebateVerdict(BaseModel):

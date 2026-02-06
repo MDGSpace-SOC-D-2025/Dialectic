@@ -3,15 +3,13 @@ from pathlib import Path
 _project_root = Path(__file__).parent.parent
 if str(_project_root) not in sys.path:
     sys.path.insert(0, str(_project_root))
-
-
 from langgraph.types import Command
 from typing import Literal
 from debate_state import DebateState
 from configuration.debate_constant import (
-    STAGE_OPENING, STAGE_REBUTTAL, STAGE_COUNTER, STAGE_FINAL_ARGUMENT,
+    STAGE_OPENING, STAGE_REBUTTAL, 
     SPEAKER_BUY, SPEAKER_SELL,
-    NODE_BUY_DEBATER, NODE_SELL_DEBATER, NODE_JUDGE,NODE_DEBATE_MODERATOR
+    NODE_SELL_DEBATER, NODE_JUDGE,
 )
 
 class DebateModeratorNode:

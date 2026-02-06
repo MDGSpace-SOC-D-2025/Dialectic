@@ -1,9 +1,8 @@
 """
 This module defines the BaseComponent class, which provides a foundation
-for managing LLM-based workflows with optional token tracking integrated into the state.
+for managing LLM-based workflows.
 """
 import sys
-import logging
 import time
 from pathlib import Path
 from typing import Optional, List, Type, Any
@@ -17,27 +16,19 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables.base import RunnableSequence
 from langchain_openai import ChatOpenAI
-from langchain_community.callbacks.manager import get_openai_callback
 from pydantic import BaseModel
-try:
-    from opentelemetry import trace
-    from opentelemetry.trace import get_tracer_provider
-    OPENTELEMETRY_AVAILABLE = True
-except ImportError:
-    OPENTELEMETRY_AVAILABLE = False
 from debate_state import DebateState
 from configuration.llm_config import OpenAILLMConfig
 
 
 class BaseComponent:
     """
-    A foundational class for managing LLM-based workflows with token tracking.
-    Can handle OpenAI (ChatOpenAI).
+    A foundational class for managing LLM-based workflows.
     """
 
     def __init__(
         self,
-        llm_config: Optional[OpenAILLMConfig] = None,
+        llm_config: OpenAILLMConfig,
         temperature: float = 0.0,
         max_retries: int = 5,
     ):
@@ -45,64 +36,46 @@ class BaseComponent:
         Initializes the BaseComponent with optional LLM configuration and temperature.
 
         Args:
-            llm_config (Optional[OpenRouterLLMConfig]): Configuration for OpenRouter.
+            llm_config (OpenAILLMConfig): Configuration for OpenRouter.
             temperature (float): Controls the randomness of LLM outputs. Defaults to 0.0.
             max_retries (int): How many times to retry on 429 errors.
         """
-        logger = logging.getLogger(self.__class__.__name__)
-        if OPENTELEMETRY_AVAILABLE:
-            tracer = trace.get_tracer(__name__, tracer_provider=get_tracer_provider())
-        else:
-            tracer = None
-
-        self.logger = logger
-        self.tracer = tracer
         self.llm: Optional[ChatOpenAI] = None
         self.output_parser: Optional[StrOutputParser] = None
         self.state: Optional[DebateState] = None
         self.prompt_template: Optional[ChatPromptTemplate] = None
         self.chain: Optional[RunnableSequence] = None
         self.documents: Optional[List] = None
-        self.prompt_tokens = 0
-        self.completion_tokens = 0
         self.max_retries = max_retries
 
         if llm_config is not None:
             self.llm = self._init_llm(llm_config, temperature)
             self.output_parser = StrOutputParser()
-
+ 
     def log_debate_event(self, message: str, prefix: str = "", style: str = ""):
-        """Centralized standard logging"""
         msg = f"{prefix} {message if message else ''}"
-        self.logger.info(msg)
+        print(msg)
 
-    def _init_llm(self, config: OpenAILLMConfig, temperature: float):
+    def _init_llm(self, llm_config_map: OpenAILLMConfig, temperature: float):
         """
         Initializes an LLM instance for OpenAI.
         """
-        if isinstance(config, OpenAILLMConfig):
-            # Use ChatOpenAI with configurable base URL (e.g. OpenRouter)
+        if isinstance(llm_config_map, OpenAILLMConfig): # checks if the config is of type OpenAILLMConfig
             return ChatOpenAI(
-                model=config.model,
-                api_key=config.api_key,
-                base_url=config.base_url,
+                model=llm_config_map.model,
+                api_key=llm_config_map.api_key,
+                base_url=llm_config_map.base_url,
                 temperature=temperature,
             )
         else:
             raise ValueError("Unsupported LLMConfig type. Expected OpenAILLMConfig.")
     def validate_initialization(self) -> None:
-        """
-        Ensures we have an LLM and an output parser.
-        """
         if not self.llm:
             raise ValueError("LLM is not initialized. Ensure `llm_config` is provided.")
         if not self.output_parser:
             raise ValueError("Output parser is not initialized.")
 
     def execute_chain(self, inputs: Any) -> Any:
-        """
-        Executes the LLM chain, tracks token usage, and retries on 429 errors.
-        """
         if not self.chain:
             raise ValueError("No chain is initialized for execution.")
 
@@ -110,26 +83,20 @@ class BaseComponent:
 
         for attempt in range(self.max_retries):
             try: #Starts a block of code that might crash
-                with get_openai_callback() as cb:
-                    result = self.chain.invoke(inputs)
-                    self.logger.info("Prompt Token usage: %s", cb.prompt_tokens)
-                    self.logger.info("Completion Token usage: %s", cb.completion_tokens)
-                    self.prompt_tokens = cb.prompt_tokens
-                    self.completion_tokens = cb.completion_tokens
-
+                result = self.chain.invoke(inputs)
                 return result
 
             except Exception as e:
                 # If the error mentions 429, do exponential backoff and retry
                 if "429" in str(e):
-                    self.logger.warning(
+                    print(
                         f"Rate limit reached. Retrying in {retry_wait} seconds... "
                         f"(Attempt {attempt + 1}/{self.max_retries})"
                     )
                     time.sleep(retry_wait)
                     retry_wait *= 2 #Exponential Backoff
                 else:
-                    self.logger.error(f"Unexpected error: {str(e)}")
+                    print(f"Unexpected error: {str(e)}")
                     raise e
 
         raise Exception("API request failed after maximum number of retries")
@@ -165,16 +132,6 @@ class BaseComponent:
         )
         self.chain = self.prompt_template | self.llm.with_structured_output(output_model, method="json_mode")
         return self.chain
-
-    def build_return_with_tokens(self, node_specific_data: dict) -> dict:
-        """
-        Convenience method to add token usage info into the return values.
-        """
-        return {
-            **node_specific_data,
-            "prompt_tokens": self.prompt_tokens,
-            "completion_tokens": self.completion_tokens,
-        }
 
     def __call__(self, state: DebateState) -> None:
         """
