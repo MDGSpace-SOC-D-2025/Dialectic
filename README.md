@@ -80,7 +80,9 @@ MY_API_KEY=your_sec_api_key  # API Key for sec-api
 
 > **Note**: `MY_API_KEY` refers to the [sec-api](https://sec-api.io) key used for fetching 10-K filings.
 
-## Screenshots / Demo
+## Screenshots
+![alt text](<Screenshot from 2026-02-07 16-32-26.png>)
+![alt text](<Screenshot from 2026-02-07 16-32-38.png>)
 
 ### Multi-Agent System Architecture Flowchart
 ![Multi-Agent System Architecture Flowchart](workflow_.png)
