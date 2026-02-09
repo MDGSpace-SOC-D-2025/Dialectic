@@ -323,7 +323,7 @@ def run_fundamental_analysis(ticker: str):
 
 
 
-    filename = "Financial_Analysis.md"
+    filename = f"Financial_Analysis_{ticker}.md"
     
     final_report_content = results["summaries"][6] 
     # final_recommendation = results["summaries"][7]

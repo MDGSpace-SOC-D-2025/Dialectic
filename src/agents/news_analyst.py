@@ -174,7 +174,7 @@ def run_news_analysis(ticker: str):
 
     results = app.invoke({"final_report": []})
        
-    filename = "News_Analysis.md"
+    filename = f"News_Analysis_{ticker}.md"
 
     final_report_content = results["final_report"] 
     # final_recommendation = results["summaries"][-1]

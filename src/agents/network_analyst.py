@@ -115,7 +115,7 @@ final analysis:
         """
     )
     analysis = response.content
-    filename = f"Network_Analysis.md"
+    filename = f"Network_Analysis_{ticker}.md"
     try:
         with open(filename, "w", encoding="utf-8") as f:
             # Adding a header to the Markdown file
