@@ -20,10 +20,12 @@ The system integrates **Fundamental Analysis**, **News Sentiment Analysis**, and
 
 ## Tech Stack
 
-*   **Language**: Python 3.8+
-*   **Frontend**: Streamlit
-*   **Orchestration**: LangGraph, LangChain
-*   **LLMs**: OpenRouter (NVIDIA Nemotron, etc.), OpenAI
+*   **Language**: Python 3.8+ ![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white)
+*   **Frontend**: Streamlit ![Streamlit](https://img.shields.io/badge/Streamlit-Frontend-FF4B4B?logo=streamlit&logoColor=white)
+*   **Orchestration**: 
+LangGraph![LangGraph](https://img.shields.io/badge/LangGraph-Orchestration-1C3C3C?logo=langchain&logoColor=white)  
+LangChain ![LangChain](https://img.shields.io/badge/LangChain-Orchestration-1C3C3C?logo=langchain&logoColor=white)
+*   **LLMs**: OpenRouter ![OpenRouter](https://img.shields.io/badge/OpenRouter-LLMs-000000?logo=openai&logoColor=white)
 *   **Database**: ChromaDB (Vector Search & Storage)
 *   **APIs & Data Sources**:
     *   AlphaVantage (Financial Data)
@@ -101,10 +103,9 @@ MY_API_KEY=your_sec_api_key  # API Key for sec-api
 ├── prompts/                # System prompts for LLMs
 ├── workflow/               # LangGraph workflow definitions
 ├── utils.py                # Helper functions
-├── chroma_db_*/            # Persistent vector stores for contexts
-└── *.md                    # Generated markdown reports
+├── chroma_db_*/            # Persistent vector stores for contexts               
 ```
-
+ 
 ## Roadmap
 
 ### Phase 1: Core Agent Development
