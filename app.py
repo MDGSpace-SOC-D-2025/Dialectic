@@ -205,9 +205,10 @@ with st.sidebar:
     
     
     # Check if analysis files exist
-    financial_exists = os.path.exists("Financial_Analysis.md")
-    news_exists = os.path.exists("News_Analysis.md")
-    network_exists = os.path.exists("Network_Analysis.md")
+    # Check if analysis files exist
+    financial_exists = os.path.exists(f"Financial_Analysis_{ticker}.md") if ticker else False
+    news_exists = os.path.exists(f"News_Analysis_{ticker}.md") if ticker else False
+    network_exists = os.path.exists(f"Network_Analysis_{ticker}.md") if ticker else False
     
     
 # Main Content Area
@@ -235,7 +236,7 @@ def read_markdown_file(filename):
 # Financial Analysis Tab
 with tab1:
     st.markdown("### 💰 Financial Data Analysis")
-    content = read_markdown_file("Financial_Analysis.md")
+    content = read_markdown_file(f"Financial_Analysis_{ticker}.md") if ticker else None
     if content:
         st.markdown(content)
     else:
@@ -244,7 +245,7 @@ with tab1:
 # News Analysis Tab
 with tab2:
     st.markdown("### 📰 News Data Analysis")
-    content = read_markdown_file("News_Analysis.md")
+    content = read_markdown_file(f"News_Analysis_{ticker}.md") if ticker else None
     if content:
         st.markdown(content)
     else:
@@ -253,7 +254,7 @@ with tab2:
 # Network Analysis Tab
 with tab3:
     st.markdown("### 🌐 Network & Supply Chain Analysis")
-    content = read_markdown_file("Network_Analysis.md")
+    content = read_markdown_file(f"Network_Analysis_{ticker}.md") if ticker else None
     if content:
         st.markdown(content)
     else:
@@ -264,9 +265,9 @@ st.markdown("---")
 st.markdown("## Debate Loop")
 
 # Check if all required data exists
-financial_data = read_markdown_file("Financial_Analysis.md") or ""
-news_data = read_markdown_file("News_Analysis.md") or ""
-network_analysis = read_markdown_file("Network_Analysis.md") or ""
+financial_data = read_markdown_file(f"Financial_Analysis_{ticker}.md") if ticker else None
+news_data = read_markdown_file(f"News_Analysis_{ticker}.md") if ticker else None
+network_analysis = read_markdown_file(f"Network_Analysis_{ticker}.md") if ticker else None
 
 if not all([financial_data, news_data, network_analysis]):
     st.warning("⚠️ Please run the full analysis first before starting the debate.")
