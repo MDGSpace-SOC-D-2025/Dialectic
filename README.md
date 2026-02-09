@@ -20,12 +20,10 @@ The system integrates **Fundamental Analysis**, **News Sentiment Analysis**, and
 
 ## Tech Stack
 
-*   **Language**: Python 3.8+ ![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white)
-*   **Frontend**: Streamlit ![Streamlit](https://img.shields.io/badge/Streamlit-Frontend-FF4B4B?logo=streamlit&logoColor=white)
-*   **Orchestration**: 
-LangGraph![LangGraph](https://img.shields.io/badge/LangGraph-Orchestration-1C3C3C?logo=langchain&logoColor=white)  
-LangChain ![LangChain](https://img.shields.io/badge/LangChain-Orchestration-1C3C3C?logo=langchain&logoColor=white)
-*   **LLMs**: OpenRouter ![OpenRouter](https://img.shields.io/badge/OpenRouter-LLMs-000000?logo=openai&logoColor=white)
+*   **Language**: ![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white)
+*   **Frontend**: ![Streamlit](https://img.shields.io/badge/Streamlit-Frontend-FF4B4B?logo=streamlit&logoColor=white)
+*   **Orchestration**: ![LangGraph](https://img.shields.io/badge/LangGraph-Orchestration-1C3C3C?logo=langchain&logoColor=white)  ![LangChain](https://img.shields.io/badge/LangChain-Orchestration-1C3C3C?logo=langchain&logoColor=white)
+*   **LLMs**: ![OpenRouter](https://img.shields.io/badge/OpenRouter-LLMs-000000?logo=openai&logoColor=white)
 *   **Database**: ChromaDB (Vector Search & Storage)
 *   **APIs & Data Sources**:
     *   AlphaVantage (Financial Data)
