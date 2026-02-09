@@ -43,12 +43,6 @@ class BuyNode(BaseComponent):
             raise ValueError(f"Unknown turn for BuyNode: stage={stage}, speaker={speaker}")
         
         new_message = create_debate_message(speaker=SPEAKER_BUY, content=result, stage=stage)
-        #Uses the parent's log_debate_event to print the argument in [green]BUY[/] color in your terminal.
-        self.log_debate_event(
-            f"[bold]{stage.upper()}[/]\n"
-            f"{result}\n",
-            prefix="BUY"
-        )
 
         return {
             "messages": messages + [new_message]

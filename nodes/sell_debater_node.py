@@ -46,11 +46,6 @@ class SellNode(BaseComponent):
             raise ValueError(f"Unknown turn for SellNode: stage={stage}, speaker={speaker}")
 
         new_message = create_debate_message(speaker=SPEAKER_SELL, content=result, stage=stage)
-        self.log_debate_event(
-            f"[bold]{stage.upper()}[/]\n"
-            f"{result}\n",
-            prefix="SELL"
-        )
         return {
             "messages": messages + [new_message]
         }

@@ -5,7 +5,7 @@ for managing LLM-based workflows.
 import sys
 import time
 from pathlib import Path
-from typing import Optional, List, Type, Any
+from typing import Optional, Type, Any
 
 # Ensure project root is in Python path for imports
 _project_root = Path(__file__).parent.parent
@@ -45,22 +45,18 @@ class BaseComponent:
         self.state: Optional[DebateState] = None
         self.prompt_template: Optional[ChatPromptTemplate] = None
         self.chain: Optional[RunnableSequence] = None
-        self.documents: Optional[List] = None
         self.max_retries = max_retries
 
         if llm_config is not None:
             self.llm = self._init_llm(llm_config, temperature)
             self.output_parser = StrOutputParser()
- 
-    def log_debate_event(self, message: str, prefix: str = "", style: str = ""):
-        msg = f"{prefix} {message if message else ''}"
-        print(msg)
+
 
     def _init_llm(self, llm_config_map: OpenAILLMConfig, temperature: float):
         """
         Initializes an LLM instance for OpenAI.
         """
-        if isinstance(llm_config_map, OpenAILLMConfig): # checks if the config is of type OpenAILLMConfig
+        if isinstance(llm_config_map, OpenAILLMConfig): # checks if the llm_config_map is of type OpenAILLMConfig
             return ChatOpenAI(
                 model=llm_config_map.model,
                 api_key=llm_config_map.api_key,
