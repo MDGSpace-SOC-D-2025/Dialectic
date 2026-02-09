@@ -59,7 +59,8 @@ async def main():
     if user_ticker:
         await run_agents_parallel(user_ticker)
     else:
-        print("No ticker provided. Using existing local analysis files if available.")
+        print("No ticker provided. Please provide a ticker to run analysis.")
+        return
     
     
     debate_topic = f"Should we buy shares of {user_ticker}?"
@@ -73,22 +74,22 @@ async def main():
     
 
     try:
-        with open("Financial_Analysis.md", "r", encoding="utf-8") as f:
+        with open(f"Financial_Analysis_{user_ticker}.md", "r", encoding="utf-8") as f:
             financial_data = f.read()
     except FileNotFoundError:
-        print("WARNING: Financial_Analysis.md not found.")
+        print(f"WARNING: Financial_Analysis_{user_ticker}.md not found.")
 
     try:
-        with open("News_Analysis.md", "r", encoding="utf-8") as f:
+        with open(f"News_Analysis_{user_ticker}.md", "r", encoding="utf-8") as f:
             news_data = f.read()
     except FileNotFoundError:
-        print("WARNING: News_Analysis.md not found.")
+        print(f"WARNING: News_Analysis_{user_ticker}.md not found.")
 
     try:
-        with open("Network_Analysis.md", "r", encoding="utf-8") as f:
+        with open(f"Network_Analysis_{user_ticker}.md", "r", encoding="utf-8") as f:
             network_analysis = f.read()
     except FileNotFoundError:
-        print("WARNING: Network_Analysis.md not found.")
+        print(f"WARNING: Network_Analysis_{user_ticker}.md not found.")
 
     
 
