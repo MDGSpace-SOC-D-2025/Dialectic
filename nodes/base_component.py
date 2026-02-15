@@ -85,12 +85,7 @@ class BaseComponent:
             except Exception as e:
                 # If the error mentions 429, do exponential backoff and retry
                 if "429" in str(e):
-                    print(
-                        f"Rate limit reached. Retrying in {retry_wait} seconds... "
-                        f"(Attempt {attempt + 1}/{self.max_retries})"
-                    )
                     time.sleep(retry_wait)
-                    retry_wait *= 2 #Exponential Backoff
                 else:
                     print(f"Unexpected error: {str(e)}")
                     raise e
@@ -116,9 +111,7 @@ class BaseComponent:
     def create_structured_output_chain(
         self, system_template: str, human_template: str, output_model: Type[BaseModel]
     ) -> RunnableSequence:
-        """
-        Creates a chain that yields structured outputs (parsed into a Pydantic model).
-        """
+        
         self.validate_initialization()
         self.prompt_template = ChatPromptTemplate.from_messages(
             [

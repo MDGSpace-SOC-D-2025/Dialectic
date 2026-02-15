@@ -35,7 +35,7 @@ class DebateWorkflow:
         workflow.add_edge(NODE_JUDGE, END)
         return workflow
 
-    async def run(self, initial_state: dict):
+    def run(self, initial_state: dict):
         workflow = self._initialize_workflow()
         graph = workflow.compile()
         
@@ -52,5 +52,5 @@ class DebateWorkflow:
                 "sell": "In favor of selling"
             }
         
-        final_state = await graph.ainvoke(initial_state, config={"recursion_limit": 50})
+        final_state = graph.invoke(initial_state, config={"recursion_limit": 50})
         return final_state
